@@ -1,4 +1,3 @@
-#include "Offset.h"
 //#################### Config Pin Motor Driver #########################
 // สำหรับการ Set Pin Drive Motor
 int PIN_ENA  = 9;
@@ -27,17 +26,6 @@ int signal_A4, signal_A1, signal_A2, signal_A3;
 int speed_go, speed_bk;
 //######################################################################
 
-
-
-
-
-
-
-
-
-
-
-
 //**********************************************************************
 void setup() {
   pinMode(DATA_CH1, INPUT);
@@ -56,34 +44,27 @@ void setup() {
 //**********************************************************************
 void loop() {
   read_rc();
-  if (DATA_CH1 <= 40 && DATA_CH1 >= 60) {       //กรณีที่โยก Pit | เพียงอย่างเดียว จะเดินหน้ากรือถอยหลัง
-    
-  }else if(DATA_CH2 <= 40 && DATA_CH2 >= 60){   //กรณีที่โยก Pit - เพียงอย่างเดียว จะเลียวซ้ายหรือเลี้ยวขวา
-    
-  }
-  else{   // ในกรณีที่ pit X หรือ /   \  
-    
+  if (DATA_CH2 >= 60 && DATA_CH1 >= 40 && DATA_CH1 <= 60) {
+    B(255);
+  } else if (DATA_CH2 <= 40 && DATA_CH1 >= 40 && DATA_CH1 <= 60) {
+    G(255);
+  } else if (DATA_CH1 >= 60 && DATA_CH2 >= 40 && DATA_CH2 <= 60 ) {
+    R(255);
+  } else if (DATA_CH1 <= 40 && DATA_CH2 >= 40 && DATA_CH2 <= 60 ) {
+    L(255);
+  } else if (DATA_CH1 <= 40 && DATA_CH2 <= 40 ) {
+    G_L(255);
+  } else if (DATA_CH1 >= 60 && DATA_CH2 <= 40 ) {
+    G_R(255);
+  } else if (DATA_CH1 >= 60 && DATA_CH2 >= 60) {
+    B_R(255);
+  } else if (DATA_CH1 <= 40 && DATA_CH2 >= 60 ) {
+    B_L(255);
+  } else {
+    S();
   }
 }
 //**********************************************************************
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //#####################################################################
 void read_rc() {
   DATA_CH1 = offset_CH(PIN_CH1, 1130, 1950);
@@ -133,26 +114,53 @@ void M_R_S() {
   digitalWrite(PIN_R2, 0);
   analogWrite(PIN_ENB, 0);
 }
-//#####################################################################
-void go(int SP_M) {
+//########################### G B #####################################
+void G(int SP_M) {
   M_L_G(SP_M);
   M_R_G(SP_M);
 }
-void back(int SP_M) {
+void B(int SP_M) {
   M_L_B(SP_M);
   M_R_B(SP_M);
 }
+//########################### L #######################################
+void G_L(int SP_M) {
+  M_R_G(SP_M);
+  M_L_S();
+}
+void B_L(int SP_M) {
+  M_R_B(255);
+  M_L_S();
+}
 void L(int SP_M) {
   M_R_G(SP_M);
+  M_L_B(SP_M);
+}
+//########################### R #######################################
+void G_R( int SP_M)
+{
+  M_L_G(SP_M);
+  M_R_S();
+}
+void B_R( int SP_M)
+{
+  M_L_B(SP_M);
+  M_R_S();
 }
 void R( int SP_M)
 {
   M_L_G(SP_M);
+  M_R_B(SP_M);
 }
-void B() {
+void S() {
   M_L_S();
   M_R_S();
 }
 //#####################################################################
+
+//Function  ในการ offset ค่าที่ได้จาก pit ของรีโมท ให้อยู่ในช่วง 0 - 100 %
+int offset_CH(int pin, int min_val, int max_val) {
+  return map(pulseIn(pin, HIGH), min_val, max_val, 0, 100);
+}
 
 
