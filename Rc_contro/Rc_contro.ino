@@ -1,10 +1,10 @@
 // บรรหาร
 //#################### Config Pin Motor Driver #########################
 // สำหรับการ Set Pin Drive Motor
-int PIN_ENA  = 9;
-int PIN_ENB  = 11;
-int PIN_L1   = 7;
-int PIN_L2   = 8;
+int PIN_ENL  = 9;
+int PIN_ENR  = 11;
+int PIN_L1   = 8;
+int PIN_L2   = 7;
 int PIN_R1   = 12;
 int PIN_R2   = 13;
 //###################### Config Pin Recive ############################
@@ -37,8 +37,8 @@ void setup() {
   pinMode(PIN_L2, OUTPUT);
   pinMode(PIN_R1, OUTPUT);
   pinMode(PIN_R2, OUTPUT);
-  pinMode(PIN_ENA, OUTPUT);
-  pinMode(PIN_ENB, OUTPUT);
+  pinMode(PIN_ENL, OUTPUT);
+  pinMode(PIN_ENR, OUTPUT);
   Serial.begin(9600);
 
 }
@@ -88,32 +88,32 @@ void pread_rc() {
 void M_L_G(int SP_M) {
   digitalWrite(PIN_L1, 1);
   digitalWrite(PIN_L2, 0);
-  analogWrite(PIN_ENA, SP_M);
+  analogWrite(PIN_ENL, SP_M);
 }
 void M_L_B(int SP_M) {
   digitalWrite(PIN_L1, 0);
   digitalWrite(PIN_L2, 1);
-  analogWrite(PIN_ENA, SP_M);
+  analogWrite(PIN_ENL, SP_M);
 }
 void M_L_S() {
   digitalWrite(PIN_L1, 0);
   digitalWrite(PIN_L2, 0);
-  analogWrite(PIN_ENA, 0);
+  analogWrite(PIN_ENL, 0);
 }
 void M_R_G(int SP_M) {
   digitalWrite(PIN_R1, 1);
   digitalWrite(PIN_R2, 0);
-  analogWrite(PIN_ENB, SP_M);
+  analogWrite(PIN_ENR, SP_M);
 }
 void M_R_B(int SP_M) {
   digitalWrite(PIN_R1, 0);
   digitalWrite(PIN_R2, 1);
-  analogWrite(PIN_ENB, SP_M);
+  analogWrite(PIN_ENR, SP_M);
 }
 void M_R_S() {
   digitalWrite(PIN_R1, 0);
   digitalWrite(PIN_R2, 0);
-  analogWrite(PIN_ENB, 0);
+  analogWrite(PIN_ENR, 0);
 }
 //########################### G B #####################################
 void G(int SP_M) {
