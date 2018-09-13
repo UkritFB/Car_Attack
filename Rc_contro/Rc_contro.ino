@@ -2,9 +2,10 @@
 //#################### Config Pin Motor Driver #########################
 // สำหรับการ Set Pin Drive Motor
 int PIN_ENL  = 9;
-int PIN_ENR  = 11;
 int PIN_L1   = 8;
 int PIN_L2   = 7;
+
+int PIN_ENR  = 11;
 int PIN_R1   = 12;
 int PIN_R2   = 13;
 //###################### Config Pin Recive ############################
@@ -21,7 +22,7 @@ int DATA_CH3 = 0; // R  |
 int DATA_CH4 = 0; // R  _
 //####################### Config Pin Attack ############################
 // สำหรับ การ Set Pin Relay
-int PIN_Att = 0;
+int PIN_Att = 6;
 //######################################################################
 int signal_A4, signal_A1, signal_A2, signal_A3;
 int speed_go, speed_bk;
@@ -39,50 +40,67 @@ void setup() {
   pinMode(PIN_R2, OUTPUT);
   pinMode(PIN_ENL, OUTPUT);
   pinMode(PIN_ENR, OUTPUT);
+  pinMode(PIN_Att, OUTPUT);
   Serial.begin(9600);
 
 }
 //**********************************************************************
 void loop() {
-  read_rc();
-  if (DATA_CH2 >= 60 && DATA_CH1 >= 40 && DATA_CH1 <= 60) {
-    B(255);
-  } else if (DATA_CH2 <= 40 && DATA_CH1 >= 40 && DATA_CH1 <= 60) {
-    G(255);
-  } else if (DATA_CH1 >= 60 && DATA_CH2 >= 40 && DATA_CH2 <= 60 ) {
-    R(255);
-  } else if (DATA_CH1 <= 40 && DATA_CH2 >= 40 && DATA_CH2 <= 60 ) {
-    L(255);
-  } else if (DATA_CH1 <= 40 && DATA_CH2 <= 40 ) {
-    G_L(255);
-  } else if (DATA_CH1 >= 60 && DATA_CH2 <= 40 ) {
-    G_R(255);
-  } else if (DATA_CH1 >= 60 && DATA_CH2 >= 60) {
-    B_R(255);
-  } else if (DATA_CH1 <= 40 && DATA_CH2 >= 60 ) {
-    B_L(255);
-  } else {
-    S();
-  }
+ // B(255);
+  //pread_rc();
+  //
+   read_rc();
+    if (DATA_CH3 >= 80) {
+     digitalWrite(PIN_Att, 0);
+    }
+    else {
+     digitalWrite(PIN_Att, 1);
+    }
+
+    if (DATA_CH2 >= 60 && DATA_CH1 >= 40 && DATA_CH1 <= 60) {
+     B(255);
+    } else if (DATA_CH2 <= 40 && DATA_CH1 >= 40 && DATA_CH1 <= 60) {
+     G(255);
+    } else if (DATA_CH1 >= 60 && DATA_CH2 >= 40 && DATA_CH2 <= 60 ) {
+     R(255);
+    } else if (DATA_CH1 <= 40 && DATA_CH2 >= 40 && DATA_CH2 <= 60 ) {
+     L(255);
+    } else if (DATA_CH1 <= 40 && DATA_CH2 <= 40 ) {
+     G_L(255);
+    } else if (DATA_CH1 >= 60 && DATA_CH2 <= 40 ) {
+     G_R(255);
+    } else if (DATA_CH1 >= 60 && DATA_CH2 >= 60) {
+     B_R(255);
+    } else if (DATA_CH1 <= 40 && DATA_CH2 >= 60 ) {
+     B_L(255);
+    } else {
+     S();
+    }
+  
+
 }
 //**********************************************************************
 //#####################################################################
 void read_rc() {
-  DATA_CH1 = offset_CH(PIN_CH1, 1130, 1950);
-  DATA_CH2 = offset_CH(PIN_CH2, 1120, 1920);
-  DATA_CH3 = offset_CH(PIN_CH3, 1160, 1820);
-  DATA_CH4 = offset_CH(PIN_CH4, 1070, 1910);
+  DATA_CH1 = offset_CH(PIN_CH1, 1065, 1939);
+  DATA_CH2 = offset_CH(PIN_CH2, 1095, 1876);
+  DATA_CH3 = offset_CH(PIN_CH3, 1152, 1770);
+  DATA_CH4 = offset_CH(PIN_CH4, 1061, 1900);
 }
 //#####################################################################
 void pread_rc() {
+  int DATA_CH11 = P_CH(PIN_CH1);
+  int DATA_CH22 = P_CH(PIN_CH2);
+  int DATA_CH33 = P_CH(PIN_CH3);
+  int DATA_CH44 = P_CH(PIN_CH4);
   Serial.print("CH1 : ");
-  Serial.print(DATA_CH1);
+  Serial.print(DATA_CH11);
   Serial.print("  CH2 : ");
-  Serial.print(DATA_CH2);
+  Serial.print(DATA_CH22);
   Serial.print("  CH3 : ");
-  Serial.print(DATA_CH3);
+  Serial.print(DATA_CH33);
   Serial.print("  CH4 : ");
-  Serial.println(DATA_CH4);
+  Serial.println(DATA_CH44);
 }
 //############################## MOTOR ################################
 void M_L_G(int SP_M) {
@@ -130,7 +148,7 @@ void G_L(int SP_M) {
   M_L_S();
 }
 void B_L(int SP_M) {
-  M_R_B(255);
+  M_R_B(SP_M);
   M_L_S();
 }
 void L(int SP_M) {
@@ -163,5 +181,9 @@ void S() {
 int offset_CH(int pin, int min_val, int max_val) {
   return map(pulseIn(pin, HIGH), min_val, max_val, 0, 100);
 }
+int P_CH(int pin) {
+  return pulseIn(pin, HIGH);
+}
+
 
 
