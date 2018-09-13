@@ -1,4 +1,3 @@
-// บรรหาร
 //#################### Config Pin Motor Driver #########################
 // สำหรับการ Set Pin Drive Motor
 int PIN_ENL  = 9;
