@@ -1,3 +1,4 @@
+//V 4.7
 //#################### Config Pin Motor Driver #########################
 // สำหรับการ Set Pin Drive Motor
 int PIN_ENL  = 9;
@@ -183,6 +184,3 @@ int offset_CH(int pin, int min_val, int max_val) {
 int P_CH(int pin) {
   return pulseIn(pin, HIGH);
 }
-
-
-
