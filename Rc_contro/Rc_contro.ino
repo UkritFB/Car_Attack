@@ -1,4 +1,6 @@
-//V 4.7
+//Version : 4.7.1
+//Date    : 12/11/2561
+//Time    : 11:00
 //#################### Config Pin Motor Driver #########################
 // สำหรับการ Set Pin Drive Motor
 int PIN_ENL  = 9;
